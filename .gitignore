@@ -12,3 +12,4 @@ build/LastFM_Top_Tracks/out00-PYZ.toc
 dist/LastFM_Top_Tracks.exe
 pysrc/*
 __pycache__/
+.cache*
