@@ -2,6 +2,7 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 from collections import namedtuple
 from funcy.seqs import first
+from datetime import date
 
 #Importing my credentials
 from credientials import *
@@ -74,7 +75,7 @@ if __name__ == '__main__':
   '''
   try:
       spotifyUserName = "r0ym0nd"
-      playlistName = "Hot Songs"
+      playlistName = "Hot Songs - " + date.today().isoformat()
       topTracks = getTopTracks()
       generate_spotify_playlist(topTracks,playlistName, spotifyUserName)
   except Exception as e:
