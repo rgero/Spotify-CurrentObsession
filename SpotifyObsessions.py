@@ -14,6 +14,12 @@ SPOTIFY_URI = credientials["SPOTIFY_URI"]
 Track = namedtuple('Track', ['artist', 'track'])
 scope = 'user-top-read playlist-modify-public'
 
+sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=SPOTIFY_API_KEY, 
+                                                client_secret=SPOTIFY_API_SECRET, 
+                                                redirect_uri=SPOTIFY_URI,
+                                                scope=scope
+                                            ))
+
 def generate_spotify_playlist(tracks, playlist_name, username):
     """
     Generates a Spotify playlist from the given tracks
@@ -21,11 +27,6 @@ def generate_spotify_playlist(tracks, playlist_name, username):
     :param playlist_name: name of playlist to create
     :param username: Spotify username
     """
-    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=SPOTIFY_API_KEY, 
-                                                   client_secret=SPOTIFY_API_SECRET, 
-                                                   redirect_uri=SPOTIFY_URI,
-                                                   scope=scope
-                                                ))
     formatted_tracks = []
     for t in tracks:
         try:
@@ -44,7 +45,7 @@ def generate_spotify_playlist(tracks, playlist_name, username):
     if token:
         sp = spotipy.Spotify(auth=token)
         sp.trace = False
-        playlist = sp.user_playlist_create(username, playlist_name)
+        playlist = sp.user_playlist_create(username, playlist_name, description=date.today().isoformat())
 
         if playlist and playlist.get('id'):
             sp.user_playlist_add_tracks(username, playlist.get('id'), track_ids)
@@ -53,12 +54,6 @@ def generate_spotify_playlist(tracks, playlist_name, username):
         print("Can't get token for", username)
 
 def getTopTracks():
-    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=SPOTIFY_API_KEY, 
-                                                client_secret=SPOTIFY_API_SECRET, 
-                                                redirect_uri=SPOTIFY_URI,
-                                                scope=scope
-                                                ))
-
     currentTracks = sp.current_user_top_tracks(limit=20, offset=0, time_range='short_term')
 
     listOfTracks=[]
@@ -68,14 +63,13 @@ def getTopTracks():
         listOfTracks.append( Track(artistName,songName) )
     return listOfTracks
 
-
 if __name__ == '__main__':
   '''
       : param spotifyUserName : Your Spotify name
   '''
   try:
       spotifyUserName = "r0ym0nd"
-      playlistName = "Hot Songs - " + date.today().isoformat()
+      playlistName = "Hot Songs"
       topTracks = getTopTracks()
       generate_spotify_playlist(topTracks,playlistName, spotifyUserName)
   except Exception as e:
