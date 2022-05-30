@@ -8,10 +8,11 @@ from datetime import date
 from credientials import *
 
 class SpotifyObsession:
-    def __init__(self, API_KEY, API_SECRET, API_URI):
+    def __init__(self, API_KEY, API_SECRET, API_URI, API_USER=None):
         self.API_KEY = API_KEY
         self.API_SECRET = API_SECRET
         self.API_URI = API_URI
+        self.API_USER = API_USER
 
         # Setting Defaults
         self.targetPlaylistName = "Hot Songs"
@@ -87,17 +88,14 @@ class SpotifyObsession:
         else:
             print("Can't get token for", self.targetUser)
 
-
-
-
-'''         Getting set up          '''
-SPOTIFY_API_KEY = credientials["SPOTIFY_API_KEY"]
-SPOTIFY_API_SECRET = credientials["SPOTIFY_API_SECRET"]
-SPOTIFY_URI = credientials["SPOTIFY_URI"]
 if __name__ == '__main__':
   try:
-      spotifyObsession = SpotifyObsession(SPOTIFY_API_KEY, SPOTIFY_API_SECRET, SPOTIFY_URI)
-      spotifyObsession.setUser("r0ym0nd")
+      SPOTIFY_API_KEY = credientials["SPOTIFY_API_KEY"]
+      SPOTIFY_API_SECRET = credientials["SPOTIFY_API_SECRET"]
+      SPOTIFY_URI = credientials["SPOTIFY_URI"]
+      SPOTIFY_USER = credientials["SPOTIFY_USER"]
+
+      spotifyObsession = SpotifyObsession(SPOTIFY_API_KEY, SPOTIFY_API_SECRET, SPOTIFY_URI, SPOTIFY_USER)
       spotifyObsession.setTargetLimit(30)
       spotifyObsession.generateSpotifyPlaylist()
   except Exception as e:
