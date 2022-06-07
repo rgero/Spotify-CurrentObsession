@@ -1,15 +1,6 @@
-credientials.py
-credientials.pyc
+credentials.py
+credentials.pyc
 *_Top_Tracks.txt
-LastFM_Top_Tracks.spec
-build/LastFM_Top_Tracks/LastFM_Top_Tracks.exe.manifest
-build/LastFM_Top_Tracks/out00-Analysis.toc
-build/LastFM_Top_Tracks/out00-EXE.toc
-build/LastFM_Top_Tracks/out00-PKG.pkg
-build/LastFM_Top_Tracks/out00-PKG.toc
-build/LastFM_Top_Tracks/out00-PYZ.pyz
-build/LastFM_Top_Tracks/out00-PYZ.toc
-dist/LastFM_Top_Tracks.exe
 pysrc/*
 __pycache__/
 .cache*

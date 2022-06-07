@@ -5,20 +5,20 @@ from funcy.seqs import first
 from datetime import date
 
 #Importing my credentials
-from credientials import *
+from credentials import *
 
 class SpotifyObsession:
     def __init__(self, API_KEY, API_SECRET, API_URI, API_USER=None):
         self.API_KEY = API_KEY
         self.API_SECRET = API_SECRET
         self.API_URI = API_URI
-        self.API_USER = API_USER
 
         # Setting Defaults
         self.targetPlaylistName = "Hot Songs"
-        self.targetUser = ""
+        self.targetPlaylistDescription = date.today().isoformat()
+        self.targetUser = API_USER
         self.tracks = []
-        self.targetLimit = 20
+        self.targetSongCount = 20
         self.timeRange = "short_term"
 
         # Setting Default Permissions
@@ -36,20 +36,33 @@ class SpotifyObsession:
         self.targetUser = targetUser
         return self
 
+    def setPlaylistDescription(self, targetDescription):
+        self.targetPlaylistDescription = targetDescription
+        return self
+
     def setPlaylistName(self, targetName):
         self.targetPlaylistName = targetName
         return self
 
-    def setTargetLimit(self, targetLimit):
-        self.targetLimit = targetLimit
+    def setTargetSongCount(self, targetCount):
+        self.targetSongCount = targetCount
         return self
 
     def setTimeRange(self, timeRange):
+        """
+        The function to define the time range Spotify should when populating your most listened songs
+
+        Valid options
+            - 'short_term' (approx 4 weeks)
+            - 'medium_term' (approx 6 months)
+            - 'long_term' (appears to be lifetime?)
+
+        """
         self.timeRange = timeRange
         return self
 
     def getTopTracks(self):
-        currentTracks = self.Spotify.current_user_top_tracks(limit=self.targetLimit, offset=0, time_range=self.timeRange)
+        currentTracks = self.Spotify.current_user_top_tracks(limit=self.targetSongCount, offset=0, time_range=self.timeRange)
 
         listOfTracks=[]
         for song in currentTracks["items"]:
@@ -80,7 +93,7 @@ class SpotifyObsession:
             # Recreate the Spotify instance because we have a new token with more permissions.
             self.Spotify = spotipy.Spotify(auth=token)
             self.Spotify.trace = False
-            playlist = self.Spotify.user_playlist_create(self.targetUser, self.targetPlaylistName, description=date.today().isoformat())
+            playlist = self.Spotify.user_playlist_create(self.targetUser, self.targetPlaylistName, description=self.targetPlaylistDescription)
 
             if playlist and playlist.get('id'):
                 self.Spotify.user_playlist_add_tracks(self.targetUser, playlist.get('id'), track_ids)
@@ -90,13 +103,13 @@ class SpotifyObsession:
 
 if __name__ == '__main__':
   try:
-      SPOTIFY_API_KEY = credientials["SPOTIFY_API_KEY"]
-      SPOTIFY_API_SECRET = credientials["SPOTIFY_API_SECRET"]
-      SPOTIFY_URI = credientials["SPOTIFY_URI"]
-      SPOTIFY_USER = credientials["SPOTIFY_USER"]
+      SPOTIFY_API_KEY = credentials["SPOTIFY_API_KEY"]
+      SPOTIFY_API_SECRET = credentials["SPOTIFY_API_SECRET"]
+      SPOTIFY_URI = credentials["SPOTIFY_URI"]
+      SPOTIFY_USER = credentials["SPOTIFY_USER"]
 
       spotifyObsession = SpotifyObsession(SPOTIFY_API_KEY, SPOTIFY_API_SECRET, SPOTIFY_URI, SPOTIFY_USER)
-      spotifyObsession.setTargetLimit(30)
+      spotifyObsession.setTargetSongCount(30)
       spotifyObsession.generateSpotifyPlaylist()
   except Exception as e:
       print(e)
